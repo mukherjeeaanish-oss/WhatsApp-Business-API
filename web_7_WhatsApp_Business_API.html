@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAConnect - Official Meta Integration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #060f0a;
+            --bg-card: #0c1a12;
+            --accent: #2ed573;
+            --accent-glow: rgba(46, 213, 115, 0.3);
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; }
+        
+        header { position:fixed; top:0; left:0; width:100%; height:80px; display:flex; justify-content:space-between; align-items:center; padding:0 5%; z-index:100; background:rgba(6,15,10,0.8); backdrop-filter:blur(10px); border-bottom:1px solid rgba(255,255,255,0.05); }
+        .logo { font-size:1.5rem; font-weight:700; display:flex; align-items:center; gap:20px; color:var(--text-main); letter-spacing:0.8px; }
+        .logo i { color:var(--accent); }
+        .nav-links { display:flex; gap:45px; list-style:none; margin-left:auto; margin-right:45px; }
+        .nav-links a { text-decoration:none; color:var(--text-muted); font-weight:500; letter-spacing:0.8px; transition:color 0.3s ease; }
+        .nav-links a:hover { color:var(--accent); }
+        .hub-trigger { background:none; border:none; color:var(--text-main); font-size:1.6rem; cursor:pointer; transition:transform 0.3s ease, color 0.3s ease; }
+        .hub-trigger:hover { color:var(--accent); transform:scale(1.1); }
+
+        .hero { padding:180px 5% 100px; text-align:center; position:relative; }
+        .hero span.meta-tag { font-size:0.85rem; font-weight:600; color:var(--accent); display:block; margin-bottom:15px; text-transform:uppercase; letter-spacing:1px; }
+        .hero h1 { font-size:3.5rem; font-weight:700; line-height:1.2; margin-bottom:20px; }
+        .hero p { font-size:1.2rem; color:var(--text-muted); max-width:700px; margin:0 auto 40px; }
+        .cta-group { display:flex; justify-content:center; gap:20px; }
+        
+        .btn-primary { background:var(--accent); color:#060f0a; border:none; padding:15px 35px; font-weight:600; border-radius:8px; cursor:pointer; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-primary:hover { transform:translateY(-3px); box-shadow:0 10px 20px var(--accent-glow); }
+        .btn-secondary { background:rgba(255,255,255,0.05); color:white; border:1px solid rgba(255,255,255,0.1); padding:15px 35px; font-weight:600; border-radius:8px; cursor:pointer; transition:all 0.3s ease; }
+        .btn-secondary:hover { background:rgba(255,255,255,0.1); transform:translateY(-2px); }
+
+        .stats-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:20px; max-width:1100px; margin:40px auto 60px; padding:0 20px; }
+        .stat-card { background:var(--bg-card); padding:30px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.02); transition:transform 0.4s ease, border-color 0.4s ease; }
+        .stat-card:hover { transform:translateY(-5px); border-color:rgba(46,213,115,0.3); }
+        .stat-card h3 { font-size:2.5rem; color:var(--accent); margin-bottom:5px; }
+        .stat-card p { color:var(--text-muted); font-size:0.9rem; }
+
+        .section-title { text-align:center; margin-bottom:5px; font-size:2rem; font-weight:700; letter-spacing:0.8px; }
+        .section-subtitle { text-align:center; color:var(--text-muted); margin-bottom:50px; }
+        
+        .capabilities-section { padding:80px 5%; border-top:1px solid rgba(255,255,255,0.02); }
+        .capabilities-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:30px; max-width:1200px; margin:0 auto; }
+        .capability-card { background:var(--bg-card); padding:40px 30px; border-radius:16px; border:1px solid rgba(255,255,255,0.03); transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .capability-card:hover { transform:translateY(-8px); border-color:var(--accent); box-shadow:0 12px 30px rgba(0,0,0,0.3); }
+        .capability-icon { width:60px; height:60px; background:rgba(46, 213, 115, 0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:var(--accent); margin-bottom:25px; }
+        .capability-card h4 { font-size:1.3rem; margin-bottom:15px; }
+        .capability-card p { color:var(--text-muted); font-size:0.95rem; line-height:1.6; }
+
+        .commerce-section { padding:80px 5%; background:rgba(255,255,255,0.01); }
+        .commerce-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; max-width:1200px; margin:0 auto; }
+        .commerce-card { background:var(--bg-card); padding:40px; border-radius:16px; border-top:4px solid var(--accent); transition:transform 0.3s ease; }
+        .commerce-card:hover { transform:translateY(-3px); }
+        .commerce-card h4 { font-size:1.4rem; margin-bottom:15px; }
+        .commerce-card p { color:var(--text-muted); line-height:1.6; }
+
+        .testimonial-section { padding:80px 5%; text-align:center; }
+        .testimonial-container { max-width:800px; margin:0 auto; background:var(--bg-card); padding:50px; border-radius:20px; border:1px solid rgba(255,255,255,0.03); }
+        .testimonial-text { font-size:1.3rem; font-style:italic; line-height:1.6; margin-bottom:25px; }
+        .testimonial-author { color:var(--accent); font-weight:600; }
+
+        .pricing-section { padding:80px 5%; }
+        .pricing-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:30px; max-width:1200px; margin:0 auto; }
+        .pricing-card { background:var(--bg-card); padding:40px 30px; border-radius:16px; border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; transition:transform 0.4s ease; }
+        .pricing-card:hover { transform:translateY(-5px); }
+        .pricing-card.popular { border-color:var(--accent); }
+        .pricing-card h4 { font-size:1.5rem; margin-bottom:10px; }
+        .price { font-size:2.5rem; font-weight:700; margin-bottom:25px; }
+        .price span { font-size:1rem; color:var(--text-muted); }
+        .features-list { list-style:none; margin-bottom:35px; flex-grow:1; }
+        .features-list li { margin-bottom:12px; color:var(--text-muted); font-size:0.95rem; display:flex; align-items:center; gap:10px; }
+        .features-list li i { color:var(--accent); }
+
+        footer { background:#030a06; padding:60px 5% 30px; border-top:1px solid rgba(255,255,255,0.05); }
+        .footer-grid { display:grid; grid-template-columns:1.5fr 1fr; gap:40px; max-width:1200px; margin:0 auto 40px; }
+        .footer-brand h3 { font-size:1.6rem; color:var(--text-main); margin-bottom:15px; }
+        .footer-brand p.slogan { font-style:italic; color:var(--text-main); margin-bottom:15px; }
+        .footer-brand p.desc { color:var(--text-muted); line-height:1.6; font-size:0.95rem; }
+        .footer-contact h4 { font-size:1.1rem; margin-bottom:20px; color:var(--accent); }
+        .contact-details { list-style:none; display:flex; flex-direction:column; gap:12px; font-size:0.9rem; color:var(--text-muted); }
+        .contact-details i { color:var(--accent); margin-right:10px; width:16px; }
+        .footer-bottom { text-align:center; color:var(--text-muted); font-size:0.9rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px; }
+
+        .hub-overlay { position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(3,10,6,0.85); backdrop-filter:blur(8px); z-index:200; display:flex; justify-content:end; opacity:0; pointer-events:none; transition:opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hub-overlay.active { opacity:1; pointer-events:auto; }
+        .hub-drawer { width:100%; max-width:500px; background:var(--bg-card); height:100%; padding:40px; overflow-y:auto; transform:translateX(100%); transition:transform 0.4s cubic-bezier(0.77, 0, 0.175, 1); box-shadow:-10px 0 30px rgba(0,0,0,0.5); border-left:1px solid rgba(255,255,255,0.02); }
+        .hub-overlay.active .hub-drawer { transform:translateX(0); }
+        .drawer-header { display:flex; justify-content:between; align-items:center; margin-bottom:30px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:15px; }
+        .close-hub { background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer; }
+        
+        .form-group { margin-bottom:20px; }
+        .form-group label { display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px; }
+        .form-control { width:100%; background:var(--bg-main); border:1px solid rgba(255,255,255,0.1); padding:12px 16px; border-radius:6px; color:white; outline:none; transition:border-color 0.3s ease; }
+        .form-control:focus { border-color:var(--accent); }
+        .radio-group { display:flex; flex-wrap:wrap; gap:15px; margin-top:5px; }
+        .radio-option { display:flex; align-items:center; gap:6px; font-size:0.9rem; cursor:pointer; }
+        .custom-status-input { display:none; margin-top:12px; animation:fadeIn 0.3s ease forwards; }
+        
+        .accordion-item { background:var(--bg-main); border-radius:8px; margin-bottom:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); }
+        .accordion-header { padding:15px; display:flex; justify-content:between; align-items:center; cursor:pointer; font-weight:500; font-size:0.9rem; }
+        .accordion-header:hover { background:rgba(255,255,255,0.01); }
+        .accordion-content { max-height:0; overflow:hidden; transition:max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s ease; background:rgba(0,0,0,0.1); color:var(--text-muted); font-size:0.85rem; line-height:1.6; }
+        .accordion-item.open .accordion-content { max-height:200px; padding:15px; transition:max-height 0.3s cubic-bezier(1, 0, 1, 0), padding 0.3s ease; }
+        .accordion-header i { transition:transform 0.3s ease; }
+        .accordion-item.open .accordion-header i { transform:rotate(180deg); color:var(--accent); }
+
+        .submission-success { text-align:center; padding:40px 10px; animation:scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        @media(max-width:968px) {
+            .stats-grid, .capabilities-grid, .pricing-grid, .commerce-grid, .footer-grid { grid-template-columns:1fr; }
+            .hero h1 { font-size:2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><i class="fab fa-whatsapp"></i> WAConnect</div>
+        <ul class="nav-links">
+            <li><a href="#capabilities">Capabilities</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <button class="hub-trigger" id="openHub" aria-label="Open Enterprise Hub"><i class="fas fa-question-circle"></i></button>
+    </header>
+
+    <section class="hero">
+        <span class="meta-tag">● Official WhatsApp Business API Partner</span>
+        <h1>Reach Your Customers<br>Where They Already Are.</h1>
+        <p>98% open rates. 5x reply rates vs email. WhatsApp is where India buys — be there first.</p>
+        <div class="cta-group">
+            <button class="btn-primary trigger-enquiry">Start Free Trial</button>
+            <button class="btn-secondary trigger-enquiry">Book Demo</button>
+        </div>
+    </section>
+
+    <div class="stats-grid">
+        <div class="stat-card"><h3>98%</h3><p>Message Open Rate</p></div>
+        <div class="stat-card"><h3>500M+</h3><p>Indians on WhatsApp</p></div>
+        <div class="stat-card"><h3>99.8%</h3><p>Delivery Rate</p></div>
+        <div class="stat-card"><h3>5x</h3><p>vs Email Reply Rate</p></div>
+    </div>
+
+    <section class="capabilities-section" id="capabilities">
+        <h2 class="section-title">Capabilities</h2>
+        <p class="section-subtitle">The complete WhatsApp Business platform for Indian enterprises.</p>
+        <div class="capabilities-grid">
+            <div class="capability-card"><div class="capability-icon">📣</div><h4>Broadcast Campaigns</h4><p>Send personalised messages to millions. Segment by behaviour, location & purchase history.</p></div>
+            <div class="capability-card"><div class="capability-icon">⚙️</div><h4>WhatsApp Automation</h4><p>Trigger-based workflows — welcome flows, abandoned cart recovery & re-engagement sequences.</p></div>
+            <div class="capability-card"><div class="capability-icon">🛒</div><h4>WA Commerce</h4><p>Full product catalogue, in-chat payments & order management — sell without leaving WhatsApp.</p></div>
+            <div class="capability-card"><div class="capability-icon">🔔</div><h4>Transactional Alerts</h4><p>OTPs, order updates, payment receipts & shipping notifications with 99.8% delivery rate.</p></div>
+            <div class="capability-card"><div class="capability-icon">👥</div><h4>Team Inbox</h4><p>Shared inbox with agent routing, SLA tracking & collision detection for your entire support team.</p></div>
+            <div class="capability-card"><div class="capability-icon">📊</div><h4>Campaign Analytics</h4><p>Open rates, click-through, conversion & revenue attribution — real-time for every campaign.</p></div>
+        </div>
+    </section>
+
+    <section class="commerce-section">
+        <h2 class="section-title">WhatsApp Commerce Made Easy</h2>
+        <p class="section-subtitle">Convert client interest directly within transactional channels.</p>
+        <div class="commerce-grid">
+            <div class="commerce-card"><h4>🛒 In-Chat Shopping</h4><p>Full product catalogue, cart management & Razorpay/UPI payments — complete purchase without leaving WhatsApp.</p></div>
+            <div class="commerce-card"><h4>🤖 Auto-Abandoned Cart</h4><p>Automatically follow up on abandoned carts with personalised WhatsApp messages — recover up to 40% of lost sales.</p></div>
+        </div>
+    </section>
+
+    <section class="testimonial-section">
+        <div class="testimonial-container">
+            <p class="testimonial-text">"Our WhatsApp campaign drove ₹18 lakh in sales in a single weekend. WAConnect's automation does what 10 agents couldn't."</p>
+            <div class="testimonial-author">— Arun Krishnamurthy, Head of E-Commerce, FreshMart</div>
+        </div>
+    </section>
+
+    <section class="pricing-section" id="pricing">
+        <h2 class="section-title">Pricing</h2>
+        <p class="section-subtitle">Transactional packages optimized for message scaling limits.</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h4>🌱 Growth</h4><div class="price">₹4,999<span>/mo</span></div>
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> 5,000 Messages/mo</li>
+                    <li><i class="fas fa-check"></i> Broadcast Campaigns</li>
+                    <li><i class="fas fa-check"></i> 2 Team Agents</li>
+                    <li><i class="fas fa-check"></i> Basic Analytics</li>
+                    <li><i class="fas fa-check"></i> Email Support</li>
+                </ul>
+                <button class="btn-secondary trigger-enquiry">Acquire Node</button>
+            </div>
+            <div class="pricing-card popular">
+                <h4>📈 Scale</h4><div class="price">₹14,999<span>/mo</span></div>
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> 50,000 Messages/mo</li>
+                    <li><i class="fas fa-check"></i> Full Automation</li>
+                    <li><i class="fas fa-check"></i> 10 Team Agents</li>
+                    <li><i class="fas fa-check"></i> Advanced Analytics</li>
+                    <li><i class="fas fa-check"></i> WA Commerce</li>
+                </ul>
+                <button class="btn-primary trigger-enquiry">Acquire Node</button>
+            </div>
+            <div class="pricing-card">
+                <h4>🏢 Enterprise</h4><div class="price">Custom</div>
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> Unlimited Messages</li>
+                    <li><i class="fas fa-check"></i> Custom Workflows</li>
+                    <li><i class="fas fa-check"></i> Unlimited Agents</li>
+                    <li><i class="fas fa-check"></i> Dedicated Manager</li>
+                    <li><i class="fas fa-check"></i> API Access</li>
+                </ul>
+                <button class="btn-secondary trigger-enquiry">Consult Gateway</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>WAConnect</h3>
+                <p class="slogan">"Orchestrating the Intelligence of Tomorrow, Today."</p>
+                <p class="desc">Official structural Meta messaging endpoints configured to support real-time high-throughput transactional broadcasts, billing systems, and webhooks secure delivery lines.</p>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Details</h4>
+                <ul class="contact-details">
+                    <li><i class="fas fa-map-marker-alt"></i>32B, Padma Street, Shanthi Nagar, VGN Shanthi Nagar, Ambattur, Chennai, Tamil Nadu 600058</li>
+                    <li><i class="fas fa-phone"></i>9363197584 | 9025384508</li>
+                    <li><i class="fas fa-envelope"></i>info@orionai.co.in</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; 2026 WAConnect. All rights reserved.</div>
+    </footer>
+
+    <div class="hub-overlay" id="hubOverlay">
+        <div class="hub-drawer">
+            <div class="drawer-header">
+                <h3><i class="fab fa-whatsapp"></i> Enterprise Integration Hub</h3>
+                <button class="close-hub" id="closeHub" aria-label="Close Gateway Panel"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="modalBody">
+                <form id="enquiryForm" onsubmit="handleFormSubmit(event)">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="form-group"><label>First Name *</label><input type="text" id="fName" class="form-control" required></div>
+                        <div class="form-group"><label>Last Name *</label><input type="text" id="lName" class="form-control" required></div>
+                    </div>
+                    <div class="form-group"><label>Email ID *</label><input type="email" id="email" class="form-control" required></div>
+                    <div class="form-group"><label>Qualification *</label><input type="text" id="qualification" class="form-control" required></div>
+                    
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <div class="radio-group">
+                            <label class="radio-option"><input type="radio" name="gender" value="Male" required> Male</label>
+                            <label class="radio-option"><input type="radio" name="gender" value="Female"> Female</label>
+                            <label class="radio-option"><input type="radio" name="gender" value="Non-Binary"> Non-Binary</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current Status *</label>
+                        <div class="radio-group">
+                            <label class="radio-option"><input type="radio" name="status" value="Working" required onchange="toggleCustomStatus(false)"> Working Professional</label>
+                            <label class="radio-option"><input type="radio" name="status" value="Student" onchange="toggleCustomStatus(false)"> Student</label>
+                            <label class="radio-option"><input type="radio" name="status" value="Others" id="statusOthers" onchange="toggleCustomStatus(true)"> Others</label>
+                        </div>
+                        <div class="custom-status-input" id="customStatusWrapper">
+                            <input type="text" id="customStatusText" class="form-control" placeholder="Please type your profession...">
+                        </div>
+                    </div>
+
+                    <div class="form-group"><label>Feedback on Program & Site *</label><textarea id="feedback" class="form-control" rows="3" required></textarea></div>
+                    <button type="submit" class="btn-primary" style="width:100%; margin-bottom:30px;">Initialize Gateway Profile</button>
+                </form>
+
+                <h4 style="margin-bottom:15px; font-size:1rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px; color:var(--accent);">Frequently Asked Questions</h4>
+                <div class="accordion-item">
+                    <div class="accordion-header">Are Meta conversation rates included? <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">Baseline plans handle portal integration; Meta conversation token charges are mapped to international criteria natively.</div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">Is official verification Green Tick automated? <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">Yes, standard business identity indexing pipelines execute registration configurations seamlessly.</div>
+                </div>
+
+                <div style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+                    <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Ask an Architectural Doubt</label>
+                    <div style="display:flex; gap:10px;"><input type="text" id="userDoubt" class="form-control" placeholder="Type query..."><button class="btn-primary" style="padding:0 15px;" onclick="addDoubt()"><i class="fas fa-paper-plane"></i></button></div>
+                    <div id="doubtsLog" style="margin-top:15px; display:flex; flex-direction:column; gap:10px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const overlay = document.getElementById('hubOverlay');
+        document.getElementById('openHub').addEventListener('click', () => overlay.classList.add('active'));
+        document.getElementById('closeHub').addEventListener('click', () => overlay.classList.remove('active'));
+        document.querySelectorAll('.trigger-enquiry').forEach(b => b.addEventListener('click', () => overlay.classList.add('active')));
+        
+        overlay.addEventListener('click', (e) => { if(e.target === overlay) overlay.classList.remove('active'); });
+
+        function toggleCustomStatus(show) {
+            const wrapper = document.getElementById('customStatusWrapper');
+            const inp = document.getElementById('customStatusText');
+            if(show) {
+                wrapper.style.display = 'block';
+                inp.setAttribute('required', 'required');
+            } else {
+                wrapper.style.display = 'none';
+                inp.removeAttribute('required');
+                inp.value = '';
+            }
+        }
+
+        document.querySelectorAll('.accordion-header').forEach(h => {
+            h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
+        });
+
+        function addDoubt() {
+            const inp = document.getElementById('userDoubt');
+            if(!inp.value.trim()) return;
+            const b = document.createElement('div');
+            b.style.cssText = "background:rgba(46,213,115,0.03); border-left:3px solid var(--accent); padding:12px; font-size:0.85rem; border-radius:4px;";
+            b.innerHTML = `<strong>Query:</strong> ${inp.value}`;
+            document.getElementById('doubtsLog').prepend(b);
+            inp.value = '';
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            document.getElementById('modalBody').innerHTML = `
+                <div class="submission-success">
+                    <i class="fas fa-check-circle" style="font-size:4rem; color:var(--accent); margin-bottom:20px;"></i>
+                    <h3>Thank You Page</h3>
+                    <p style="color:var(--text-muted); margin:15px 0 25px;">Data verified. Gateway credentials preparing for secure cloud dispatch patterns.</p>
+                    <div style="font-style:italic; font-size:0.95rem; color:white;">"Orchestrating the Intelligence of Tomorrow, Today."</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
